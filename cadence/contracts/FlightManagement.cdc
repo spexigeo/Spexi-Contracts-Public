@@ -1,14 +1,6 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
 
 pub contract FlightManagement: NonFungibleToken {
-  /*
-
-  Security Concerns:
-
-    - is it okay to give borrowAuthNFT access to public interface ?
-
-  */
-
  
   pub var totalSupply: UInt64
   pub event ContractInitialized()
@@ -182,3 +174,4 @@ pub contract FlightManagement: NonFungibleToken {
   } 
 
 }
+ 
