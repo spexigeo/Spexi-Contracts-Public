@@ -10,17 +10,40 @@ By using Spexigon, organizations that require high-resolution aerial imagery wil
 
 Our goal is to remove friction from the process by collecting high resolution aerial imagery in advance of demand, and then making it easily available online.
 
+## What does spexi look like on a technical level? What is the desired userflow?
+
+- Web Application
+- Mobile Application
+- Contracts (ZoneManagement, FlightManagement, ProductManagement)
+
+Spexi will have a web application which will include a world map covered by `zones` (world map is divided into these areas) and some sort of marketplace to sell the final data. In the web app pilots will be able to pick a zone that does not have coverage yet and reserve it to go film and fly over it.
+
+Once they're on site they will use our mobile application and click 'begin flight'. This will be a `transaction` from `FlightManagement` which will create an empty `FlightManagement NFT` which we will refer to as `FlightReceipts`. This receipt is treated as a "promise" to provide us data in exchange of us putting you into a `queue` over the zone (uncovered zones are limited to a maximum of 4 pilots getting footage at once). Once they have completed their flight. They can let us know by clicking a "completed flight" button. From here they will have a time limit of 24-48 hours to submit their data to us for verification. Once they arrive home and are ready to submit their footage, they will go on the web application and drag and drop thier files. The upload itself will be a transaction from `FlightManagement` which will modify the receipt from an `awaitSubmission` state into `InReview` state. This is where we will do some verification to make sure the correct zone was covered, the coverage time was correct etc... Once this process is complete, based on the result, the status of the receipt is modified to `Failed` or `Verified` and the metadata will be updated with the files and all of that information. This reciept will stay in their wallet and it will be theirs to keep.
+
+Upon a `Verified` state, we will run a transaction to mint a `Product` from `ProductManagement`. A product is made up a `FlightReceipt` `FlightType`. A `FlightReceipt` has an array of `FlightTypes`, which include [rawData,Orbit,Map,Pano]. Each item in the array is a seperate product. So if the zone flightreciept covered an area that uses 3 of these things, 3 `Product NFT`s will be minted. Using a transaction we will mint `FlightTypes.length` amount of `Product NFT`s. These will be the final form of the product which we will provide on our marketplace/store for our customers.
+
 ## What are the goals of these contracts?
 
 We would like to create an economy for our Pilots to incetivize them to collect high quality data and provide it to us to provide on our platform. These contracts will operate on chain to ensure transparency and ownership is and rights of pilots are maintained.
 
 ## What is the structure of the contracts/How far along are these contracts built?
 
-We have
+We have decided to structure our contracts into 3 segments so far.
 
-## What is the user flow of these contracts along with a front end?
+1. `ZoneManagement.cdc`
+
+   - The goal of `ZoneManagement` is to manage our zones over the world. We will introduce Zones gradually into the world and we will do that by creating a new zone. We will also have the ability to delete a zone (ex. in case of certain laws). We will also be able to manage queues and pilots over certain zones etc...
+
+2. `FlightManagement.cdc`
+
+   - The goal of `FlightManagement` is to manage flights and file submissions before they become finalized into products. We will be able to create and modify receipt states as the pilots go through the process. Once these become products, the receipts become like achievement badges/proof of flying.
+
+3. `ProductManagement.cdc`
+   - The goal of `ProductManagement` is to manage final products. This is where we will create the products and set the revenue share. Our front-end will be displaying these NFTs and their data to be sold.
 
 ## Where are the security concerns in these contracts mostly?
+
+While building
 
 ---
 
