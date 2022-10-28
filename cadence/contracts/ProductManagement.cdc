@@ -1,7 +1,5 @@
 import NonFungibleToken from "./NonFungibleToken.cdc"
 import FlightManagement from "./FlightManagement.cdc"
-import MetadataViews from "./MetadataViews.cdc"
-
 
 pub contract ProductManagement: NonFungibleToken {
 
@@ -24,7 +22,7 @@ pub contract ProductManagement: NonFungibleToken {
     //@param date: date of flight
     //@param thumbail: URI of the thubmnail image of NFT
     //@param metadataURI: URI where all the metadata will be stored
-    pub resource NFT: NonFungibleToken.INFT, MetadataViews.Resolver {
+    pub resource NFT: NonFungibleToken.INFT {
         pub let id: UInt64 
         pub let name: String
         pub let description: String
@@ -46,82 +44,6 @@ pub contract ProductManagement: NonFungibleToken {
             self.metadataURI = _metadataURI
             self.name = _zone.concat(" ").concat((self.date).toString()).concat(" ").concat(_productType)
             self.description = _coordinates
-        }
-
-        pub fun getViews(): [Type] {
-            return [
-            
-                Type<MetadataViews.Display>(),
-                Type<MetadataViews.Royalties>(),
-                Type<MetadataViews.ExternalURL>(),
-                Type<MetadataViews.NFTCollectionData>(),
-                Type<MetadataViews.NFTCollectionDisplay>(),
-                Type<MetadataViews.Traits>()
-            
-            ]
-        }
-
-        pub fun resolveView(_ view: Type): AnyStruct? {
-        /*
-            switch view {
-                case Type<MetadataViews.Display>():
-                    return MetadataViews.Display(
-                        name: self.name,
-                        description: self.description,
-                        thumbnail: MetadataViews.HTTPFile(
-                            url: self.thumbnail
-                        )
-                    )
-                case Type<MetadataViews.Royalties>():
-                    return MetadataViews.Royalties(
-                        self.royalties
-                    )
-                case Type<MetadataViews.ExternalURL>():
-                    //need to change this to URL we want later
-                    //return MetadataViews.ExternalURL("https://example-nft.onflow.org/".concat(self.id.toString()))
-                    return nil
-                case Type<MetadataViews.NFTCollectionData>():
-                    return MetadataViews.NFTCollectionData(
-                        storagePath: ProductManagement.ProductCollectionStoragePath,
-                        publicPath: ProductManagement.ProductCollectionPublicPath,
-                        providerPath: /private/exampleNFTCollection,
-                        publicCollection: Type<&ProductManagement.Collection{ProductManagement.ICollection}>(),
-                        publicLinkedType: Type<&ProductManagement.Collection{ProductManagement.ICollection,NonFungibleToken.CollectionPublic,NonFungibleToken.Receiver,MetadataViews.ResolverCollection}>(),
-                        providerLinkedType: Type<&ProductManagement.Collection{ProductManagement.ICollection,NonFungibleToken.CollectionPublic,NonFungibleToken.Provider,MetadataViews.ResolverCollection}>(),
-                        createEmptyCollectionFunction: (fun (): @NonFungibleToken.Collection {
-                            return <-ProductManagement.createEmptyCollection()
-                        })
-                    )
-                case Type<MetadataViews.NFTCollectionDisplay>():
-                    let media = MetadataViews.Media(
-                        //insert proper storage path
-                        file: MetadataViews.HTTPFile(
-                            //url: "https://assets.website-files.com/5f6294c0c7a8cdd643b1c820/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.svg"
-                            url: ""
-                        ),
-                        mediaType: "image/svg+xml"
-                    )
-                    return MetadataViews.NFTCollectionDisplay(
-                        name: "Spexi Flight Collection",
-                        description: "This collection is to display current availabel and approved flight data for spexi",
-                        externalURL: MetadataViews.ExternalURL(""),
-                        squareImage: media,
-                        bannerImage: media,
-                        socials: {
-                            "twitter": MetadataViews.ExternalURL("https://twitter.com/spexigon")
-                        }
-                    )
-                case Type<MetadataViews.Traits>():
-                    let excludedTraits: [String] = []
-                    let traitDictionary: {String:AnyStruct} = {
-                        "flightType": "FlightType",
-                        "dataURL": "Data URL",
-                        "numOfFiles": "Num OF Files"
-                    }
-                    return MetadataViews.dictToTraits(dict: traitDictionary, excludedNames:excludedTraits)
-            }
-            */
-            return nil
         }
     }
 
@@ -192,13 +114,6 @@ pub contract ProductManagement: NonFungibleToken {
         
         }
 
-        /*
-        pub fun borrowViewResolver(id: UInt64): &AnyResource{MetadataViews.Resolver} {
-            let nft = (&self.ownedNFTs[id] as auth &NonFungibleToken.NFT?)!
-            let productNFT = nft as! &ProductManagement.NFT
-            return productNFT as &AnyResource{MetadataViews.Resolver}
-        }
-        */
 
         init() {
             self.ownedNFTs <- {}

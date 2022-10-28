@@ -41,9 +41,13 @@ We have decided to structure our contracts into 3 segments so far.
 3. `ProductManagement.cdc`
    - The goal of `ProductManagement` is to manage final products. This is where we will create the products and set the revenue share. Our front-end will be displaying these NFTs and their data to be sold.
 
+So far we have built these 3 contracts and built transactions and scripts to go along with them. We have not tackled any of the tokenomics/defi aspects of the project just yet. We will begin tackling the revenue generation models after we're a bit more happy with the state of these 3 contracts. We have also not implemented `MetadataViews` in `FlightMangement` or `ProductManagment`.
+
 ## Where are the security concerns in these contracts mostly?
 
-While building
+While building these contracts, we have noticed that most of our concerns come down to interfaces and permissions for functions. For `FlightManagement` and `ProductManagement`, the we'd like to allow pilots to store their own NFTs, in thier own accounts. Which brings up some permission issues. We have admin resources in both of these contracts that should have some minor modification accesses to the NFTs. But we'd like to know how we can implement these functionalities safely while ensuring we're not leaving room for our contracts to be exploited. So most of the notes in the contracts will be in regards to how can we as the "admin resource" have access to this function and not allow the public or even the NFT holder to access it.
+
+### Note: we left `//DAPPER:` comments in the code on lines we felt needed to be looked over.
 
 ---
 
@@ -61,7 +65,7 @@ This contract will be used to manage all flight submissions. The general overvie
 
 #### Things to keep in mind:
 
-- Only hodler of `ReceiptMinter` is able to create receipts/modify them
+- Only holder of `ReceiptMinter` is able to create receipts/modify them
 - In order to mint a receipt for someone, they must have a collection initialized in their storage.
 
 ## FlightManagement - Scripts/Transactions:
@@ -146,8 +150,8 @@ This transaction will mint a brand new product with the specified inputs of the 
 
 In order to mint to an address, the address MUST have a collection in their account.
 
-#### 3. `destroy_product`:
+#### 3. `switch_off_product`:
 
-This function allows us to delete a certain NFT out of a collection. It takes the inputs of an `address` and `id` for which nft you would like to destroy.
+This function allows us to switch a boolean of a certain NFT. It takes the inputs of an `address` and `id` for which nft you would like to turn off. This boolean will be a way for us to `invalidate it` in case some malicious/incorrect information passed our automated verification.
 
-This function works but currently has some concerns around it. Its currently accessible by anyone (anyone can delete an NFT). But also we need to be aware of the fact that when we delete an NFT, we remove its ID from circulation but the totalSupply and the IDs of everything else dont change. Meaning, if we delete NFT with `id = 1`, then NFT with `id = 2` will maintain that ID but we will no longer have an NFT with `id = 1`. So we would need to keep track of which NFTs were deleted in our back end.
+This function works but currently has some concerns around it. Its currently accessible by anyone (anyone can switch off the boolean NFT).
