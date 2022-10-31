@@ -10,7 +10,7 @@ transaction(name: String, coordinates: [UInt8]) {
         
         //Get our collection from our private storage.
         self.collection = account.borrow<&ZoneManagement.Collection>
-        (from: ZoneManagement.CollectionPublicPath) ?? panic("Could not find zone collection.")
+        (from: ZoneManagement.CollectionStoragePath) ?? panic("Could not find zone collection.")
     }
 
     execute {
