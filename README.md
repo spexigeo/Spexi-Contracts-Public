@@ -155,3 +155,83 @@ In order to mint to an address, the address MUST have a collection in their acco
 This function allows us to switch a boolean of a certain NFT. It takes the inputs of an `address` and `id` for which nft you would like to turn off. This boolean will be a way for us to `invalidate it` in case some malicious/incorrect information passed our automated verification.
 
 This function works but currently has some concerns around it. Its currently accessible by anyone (anyone can switch off the boolean NFT).
+
+---
+
+## ZoneManagement:
+
+This contract will be used to manage zones. The general overview of how this contract will be utilized is as follows:
+
+- We will slowly add new zones in as we introduce new regions, starting with BC as our first region. We will mint all our new zones throught this contract.
+- We will track who is flying and recording each zone through this contract and track the pilotqueue through here as well.
+- We will also use this contract to delete zones if needed(ex. legal reasons).
+
+#### Things to keep in mind:
+
+- all `ZoneManagement NFTs` will be held by us in our account
+
+## ZoneManagement - Scripts/Transactions:
+
+### Scripts:
+
+#### 1. `get_all_zone_data`,`get_zone_data_by_id`,`get_zone_data_by_list`:
+
+These 3 scripts return data on a zone in 3 different ways:
+
+1. By ID of a specific zone. Takes an input of `account address` and an ID of `UInt64`. The return type is `SpexiDataStandards.ZoneData?`
+2. A list of zones. Takes an input of `account address` and `[UInt64]`. The return type is `[SpexiDataStandards.ZoneData?]`
+3. All zones. Takes an input of `account address`. The return type is an array `[SpexiDataStandards.ZoneData?]`
+
+#### 2. `get_all_zone_nft_data`,`get_zone_nft_data_by_id`,`get_zone_nft_data_by_list`:
+
+These 3 scripts return data on a zone NFT in 3 different ways:
+
+1. By ID of a specific zone. Takes an input of `account address` and an ID of `UInt64`. The return type is `SpexiDataStandards.NFTData?`
+2. A list of zones. Takes an input of `account address` and `[UInt64]`. The return type is `[SpexiDataStandards.NFTData?]`
+3. All zones. Takes an input of `account address`. The return type is an array `[SpexiDataStandards.NFTData?]`
+
+#### 3. `get_all_zone_statuses`,`get_zone__statuses_by_id`,`get_zone__statuses_by_list`:
+
+These 3 scripts return the status of a zone in 3 different ways:
+
+1. By ID of a specific zone. Takes an input of `account address` and an ID of `UInt64`. The return type is `SpexiDataStandards.ZoneStatus?`
+2. A list of zones. Takes an input of `account address` and `[UInt64]`. The return type is `[SpexiDataStandards.ZoneStatus?]`
+3. All zones. Takes an input of `account address`. The return type is an array `[SpexiDataStandards.ZoneStatus?]`
+
+#### 4. `get_zones`,`get_zones_by_id`,`get_zones_by_list`:
+
+These 3 scripts return zones 3 different ways:
+
+1. By ID of a specific zone. Takes an input of `account address` and an ID of `UInt64`. The return type is `&ZoneManagement.NFT?`
+2. A list of zones. Takes an input of `account address` and `[UInt64]`. The return type is `[&ZoneManagement.NFT?]`
+3. All zones. Takes an input of `account address`. The return type is an array `[&ZoneManagement.NFT?]`
+
+### Transactions:
+
+#### 1. `create_zone`:
+
+This transaction has to be run by the admin of ZoneManagement, and it takes an input of `name` and `coordinates` of the specific zone you'd like to create.
+
+#### 2. `destroy_zone`:
+
+This transaction will destory a zone and must be run by the admin of ZoneManagement. It takes an input of `ID` of zone you'd like to destroy.
+
+#### 3. `remove_all_reservations`:
+
+This transaction will remove all pilot addresses from the queue if any exist. In case we want to close it up and not allow pilots to fly it. It takes `ID` of zone you would like to remove reservations from.
+
+#### 4. `remove_reservations`:
+
+This transaction will remove a specific address from the pilot queue of a specific zone. It takes `ID` of a zone and `Address` of pilot you'd like to remove from queue.
+
+#### 5. `reserve_zone`:
+
+This transaction will add a pilot to the queue of a zone. It takes `ID` of a zone and `Address` of pilot you'd like to add to the queue.
+
+#### 6. `set_zone_freshness`:
+
+This transaction will set the freshness time of this zone (which is length of validity of a product over this area). This takes `ID` and `freshAtTime` which is the time the freshness of the zone should be reset.
+
+#### 7. `update_coordinates`:
+
+This transaction will update the coordinates of a zone. This will be useful if we ever need to modify zone sizes or locations. This takes `ID` of zone and `coordinates` that you'd like to update this zone to.
