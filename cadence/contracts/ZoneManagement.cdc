@@ -248,7 +248,7 @@ pub contract ZoneManagement: NonFungibleToken {
             for id in ids { self.setZoneFreshDate(id:id, freshAtTime:freshAtTime) } 
         }
 
-        access(account) fun updateCoordinates(id: UInt64, coordinates: [UInt8]) {
+        pub fun updateCoordinates(id: UInt64, coordinates: [UInt8]) {
             let zone = self.borrowZone(id: id) ?? panic(ZoneManagement.errorList.idDoesntExist)
             if(zone.getStatus().reservedPilotCount != 0) { panic(ZoneManagement.errorList.changeCoordinatesWithPilotTrouble) }
             zone.updateCoordinates(coordinates: coordinates)
@@ -262,7 +262,7 @@ pub contract ZoneManagement: NonFungibleToken {
     pub resource ZoneAdmin {
         
         //Create a zone.
-        access(account) fun mintZone(
+        pub fun mintZone(
             recipient: &{NonFungibleToken.CollectionPublic}, 
             name: String,
             coordinates: [UInt8]
@@ -284,53 +284,53 @@ pub contract ZoneManagement: NonFungibleToken {
         }
 
         //Destroy a zone and its data.
-        access(account) fun destroyZone(collection: &ZoneManagement.Collection, id: UInt64) {
+        pub fun destroyZone(collection: &ZoneManagement.Collection, id: UInt64) {
             collection.destroyZone(id: id)
             ZoneManagement.totalSupply = ZoneManagement.totalSupply - 1
         }
 
         //Reserve a zone by id with a pilots address.
-        access(account) fun reserveZone(collection: &ZoneManagement.Collection, id: UInt64, address: Address) {
+       pub fun reserveZone(collection: &ZoneManagement.Collection, id: UInt64, address: Address) {
             collection.reserveZone(id: id, address: address)
         }
 
         //Remove a pilots reservation by providing their reserved zone and their address.
-        access(account) fun removeReservation(collection: &ZoneManagement.Collection, id: UInt64, address: Address) {
+        pub fun removeReservation(collection: &ZoneManagement.Collection, id: UInt64, address: Address) {
             collection.removeReservation(id: id, address: address)
         }
 
         //Remove all reservations on a zone.
-        access(account) fun removeAllReservations(collection: &ZoneManagement.Collection, id: UInt64) {
+        pub fun removeAllReservations(collection: &ZoneManagement.Collection, id: UInt64) {
             collection.removeAllReservations(id: id)
         }
 
         //Remove all reservations from all existing zones.
-        access(account) fun removeAllReservationsFromAllZones(collection: &ZoneManagement.Collection) {
+        pub fun removeAllReservationsFromAllZones(collection: &ZoneManagement.Collection) {
             collection.removeAllReservationsFromAllZones()
         }
 
         //Remove all reservations from all zones in a list.
-        access(account) fun removeAllReservationsFromList(collection: &ZoneManagement.Collection, ids: [UInt64]) {
+        pub fun removeAllReservationsFromList(collection: &ZoneManagement.Collection, ids: [UInt64]) {
             collection.removeAllReservationsFromList(ids: ids)
         }
 
         //Set the time that a zone is considered fresh for surveying.
-        access(account) fun setZoneFreshDate(collection: &ZoneManagement.Collection, id: UInt64, freshAtTime: UFix64) {
+       pub fun setZoneFreshDate(collection: &ZoneManagement.Collection, id: UInt64, freshAtTime: UFix64) {
             collection.setZoneFreshDate(id: id, freshAtTime: freshAtTime)
         }
 
         //Set the time that a zone is considered fresh for all zones.
-        access(account) fun setZoneFreshDateForAllZones(collection: &ZoneManagement.Collection, freshAtTime: UFix64) {
+        pub fun setZoneFreshDateForAllZones(collection: &ZoneManagement.Collection, freshAtTime: UFix64) {
             collection.setZoneFreshDateForAllZones(freshAtTime: freshAtTime)
         }
 
         //Set the time that a zone is considered fresh for a list of zones.
-        access(account) fun setZoneFreshDateForZoneList(collection: &ZoneManagement.Collection, ids: [UInt64], freshAtTime: UFix64) {
+        pub fun setZoneFreshDateForZoneList(collection: &ZoneManagement.Collection, ids: [UInt64], freshAtTime: UFix64) {
             collection.setZoneFreshDateForZoneList(ids: ids, freshAtTime: freshAtTime)
         }
 
         //Update the coordinates for a zone.
-        access(account) fun updateCoordinates(collection: &ZoneManagement.Collection, id: UInt64, coordinates: [UInt8]) {
+        pub fun updateCoordinates(collection: &ZoneManagement.Collection, id: UInt64, coordinates: [UInt8]) {
             collection.updateCoordinates(id: id, coordinates: coordinates)
         }
     }
